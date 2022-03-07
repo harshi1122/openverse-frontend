@@ -18,7 +18,7 @@
     <VMetaSearchForm
       v-if="!fetchState.isFetching"
       :type="metaSearchFormType"
-      :has-no-result="hasNoResult"
+      :has-no-results="hasNoResults"
       :query="query"
       :is-supported="isSupported"
     />
@@ -42,10 +42,17 @@ import VMetaSearchForm from '~/components/VMetaSearch/VMetaSearchForm.vue'
 import VErrorSection from '~/components/VErrorSection/VErrorSection.vue'
 import VErrorImage from '~/components/VErrorSection/VErrorImage.vue'
 import VNoResults from '~/components/VErrorSection/VNoResults.vue'
+import VSearchResultsTitle from '~/components/VSearchResultsTitle.vue'
 
 export default {
   name: 'VSearchGrid',
-  components: { VErrorSection, VMetaSearchForm, VErrorImage, VNoResults },
+  components: {
+    VErrorSection,
+    VMetaSearchForm,
+    VErrorImage,
+    VNoResults,
+    VSearchResultsTitle,
+  },
   props: {
     supported: {
       type: Boolean,
@@ -70,7 +77,7 @@ export default {
     },
   },
   setup(props) {
-    const hasNoResult = computed(() => {
+    const hasNoResults = computed(() => {
       // noResult is hard-coded for search types that are not currently
       // supported by Openverse built-in search
       return props.supported
@@ -88,7 +95,7 @@ export default {
     })
 
     return {
-      hasNoResult,
+      hasNoResults,
       isSupported,
       metaSearchFormType,
       isAllView,

@@ -13,7 +13,7 @@
       <template #media>
         <NuxtChild
           :key="$route.path"
-          :media-results="results"
+          :result-items="resultItems"
           :fetch-state="fetchState"
           :is-filter-visible="isVisible"
           :search-term="query.q"
@@ -80,7 +80,7 @@ const BrowsePage = {
   computed: {
     ...mapState(SEARCH, ['query', 'searchType']),
     ...mapGetters(SEARCH, ['searchQueryParams', 'isAnyFilterApplied']),
-    ...mapGetters(MEDIA, ['results', 'resultCount', 'fetchState']),
+    ...mapGetters(MEDIA, ['resultCount', 'fetchState', 'resultItems']),
     mediaType() {
       return this.searchType ?? ALL_MEDIA
     },
