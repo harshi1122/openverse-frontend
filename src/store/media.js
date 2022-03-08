@@ -114,15 +114,10 @@ export const createActions = (services = mediaServices) => ({
    * @return {Promise<void>}
    */
   async [FETCH_SINGLE_MEDIA_TYPE](
-    { commit, dispatch, rootState, rootGetters },
+    { commit, dispatch, rootState, rootGetters, state },
     payload
   ) {
-    const {
-      mediaType,
-      page = undefined,
-      shouldPersistMedia = false,
-      ...params
-    } = payload
+    const { mediaType, shouldPersistMedia = false, ...params } = payload
 
     const queryParams = prepareSearchQueryParams({
       ...rootGetters['search/searchQueryParams'],
@@ -130,7 +125,7 @@ export const createActions = (services = mediaServices) => ({
     })
 
     // does not send event if user is paginating for more results
-    if (!page) {
+    if (!shouldPersistMedia) {
       const sessionId = rootState.user.usageSessionId
       await dispatch(
         `${USAGE_DATA}/${SEND_SEARCH_QUERY_EVENT}`,
@@ -141,8 +136,10 @@ export const createActions = (services = mediaServices) => ({
 
     commit(FETCH_START_MEDIA, { mediaType })
     try {
-      const mediaPage = typeof page === 'undefined' ? page : page[mediaType]
-
+      let mediaPage
+      if (shouldPersistMedia) {
+        mediaPage = state.results[mediaType].page + 1
+      }
       const data = await services[mediaType].search({
         ...queryParams,
         page: mediaPage,
@@ -264,14 +261,6 @@ export const getters = {
    */
   resultCountsPerMediaType(state) {
     return supportedMediaTypes.map((type) => [type, state.results[type].count])
-  },
-  /**
-   * Returns current page for each supported media type.
-   * @param {import('./types').MediaState} state
-   * @returns {[import('./types').MediaType, number][]}
-   */
-  pagesPerMediaType(state) {
-    return supportedMediaTypes.map((type) => [type, state.results[type].page])
   },
   /**
    * Returns the total count of results for selected search type, sums all media results for ALL_MEDIA.
