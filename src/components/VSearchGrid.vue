@@ -35,7 +35,6 @@
 import { computed } from '@nuxtjs/composition-api'
 
 import { ALL_MEDIA, IMAGE, supportedSearchTypes } from '~/constants/media'
-
 import { NO_RESULT } from '~/constants/errors'
 
 import VMetaSearchForm from '~/components/VMetaSearch/VMetaSearchForm.vue'
